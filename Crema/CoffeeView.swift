@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct CoffeeView: View {
-    @Bindable var coffee: Coffee = Coffee(roaster: "Test", name: "Beans")
+    @Bindable var coffee: Coffee = Coffee(roaster: "Roaster Name", name: "Bean Name")
     
     var body: some View {
         VStack(alignment: .leading) {
