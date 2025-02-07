@@ -10,46 +10,45 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
+    @Query(sort: \Coffee.rating, order: .reverse) private var coffees: [Coffee]
 
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                    }
-                }
-                .onDelete(perform: deleteItems)
+        NavigationStack {
+            List(coffees) { coffee in
+                CoffeeListCell(coffee: coffee)
             }
+            .listStyle(.plain)
+            .padding(.top, 8)
+            
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
+                ToolbarItem(placement: .principal) {
+                    Text("Crema")
+                        .bold()
+                        .foregroundColor(Color(red: 73/255, green: 54/255, blue: 40/255))
                 }
                 ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+                    Button(action: addCoffee) {
+                        Label("Add Coffee", systemImage: "plus")
                     }
                 }
             }
-        } detail: {
-            Text("Select an item")
+            .toolbarBackground(Color(red: 214/255, green: 192/255, blue: 179/255), for:.navigationBar)
+            .toolbarBackground(.visible, for:.navigationBar)
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
-
-    private func addItem() {
+    
+    private func addCoffee() {
         withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
+            let newCoffee = Coffee(roaster: "Roasty McRoastface", name: "Beany McBeanface Very Long Name", rating: 3.5)
+            modelContext.insert(newCoffee)
         }
     }
-
-    private func deleteItems(offsets: IndexSet) {
+    
+    private func deleteCoffees(offsets: IndexSet) {
         withAnimation {
             for index in offsets {
-                modelContext.delete(items[index])
+                modelContext.delete(coffees[index])
             }
         }
     }
@@ -57,5 +56,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
+        .modelContainer(SampleData.shared.modelContainer)
 }
