@@ -12,6 +12,15 @@ struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Coffee.rating, order: .reverse) private var coffees: [Coffee]
     @State var showAddCoffeeSheet: Bool = false
+    
+    let backgroundGradient = LinearGradient(
+        colors: [
+            //Color(red: 0.9254901960784314, green: 0.9137254901960784, blue: 0.9019607843137255), //silver
+            Color.white,
+            //Color(red: 0.8549019607843137, green: 0.8862745098039215, blue: 0.9725490196078431), //blue
+            //Color(red: 0.8392156862745098, green: 0.6431372549019608, blue: 0.6431372549019608), //pink
+        ],
+        startPoint: .top, endPoint: .bottom)
 
     var body: some View {
         NavigationStack {
@@ -29,21 +38,20 @@ struct ContentView: View {
             }
             
             .toolbar {
-                ToolbarItem(placement: .principal) {
-                    Text("Crema")
-                        .bold()
-                        .foregroundColor(Color(red: 73/255, green: 54/255, blue: 40/255))
-                }
                 ToolbarItem {
                     Button(action: {showAddCoffeeSheet = true}) {
-                        Label("Add Coffee", systemImage: "plus")
+                        Label("Add Coffee", systemImage: "plus.circle.fill")
+                            .foregroundStyle(.primary)
+                            .font(.system(size: 24))
                     }
+                    .buttonStyle(PlainButtonStyle())
                 }
             }
-            .toolbarBackground(Color(red: 214/255, green: 192/255, blue: 179/255), for:.navigationBar)
-            .toolbarBackground(.visible, for:.navigationBar)
-            .navigationBarTitleDisplayMode(.inline)
+            
+            .scrollContentBackground(.hidden)
+            .background(backgroundGradient)
         }
+        
     }
     
     private func deleteCoffees(offsets: IndexSet) {

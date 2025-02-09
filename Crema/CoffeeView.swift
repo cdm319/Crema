@@ -13,13 +13,35 @@ struct CoffeeView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            Image("PlaceholderCoffee")
-                .resizable()
-                .edgesIgnoringSafeArea(.top)
-                .scaledToFill()
-                .containerRelativeFrame(.vertical) { size, axis in
-                    size * 0.5
+            ZStack {
+                Rectangle()
+                    .fill(RadialGradient(colors: [.white, .gray], center: .center, startRadius: 10, endRadius: 400))
+                    .opacity(0.8)
+                    .ignoresSafeArea(edges: .top)
+                    .containerRelativeFrame(.vertical) { size, axis in
+                        size * 0.5
+                    }
+                if let pictureData = coffee.pictureData {
+                    Image(uiImage: UIImage(data: pictureData)!)
+                        .resizable()
+                        .aspectRatio(1, contentMode: .fit)
+                        
+                        .scaledToFill()
+                        .containerRelativeFrame(.vertical) { size, axis in
+                            size * 0.5
+                        }
+                } else {
+                    Image("Placeholder")
+                        .resizable()
+                        .aspectRatio(1, contentMode: .fit)
+                        
+                        .scaledToFill()
+                        .containerRelativeFrame(.vertical) { size, axis in
+                            size * 0.5
+                        }
                 }
+            }
+            
             VStack(alignment: .leading) {
                 Text("\(coffee.roaster)").font(.subheadline)
                 
